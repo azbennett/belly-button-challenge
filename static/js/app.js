@@ -2,11 +2,11 @@ const json_location = "https://2u-data-curriculum-team.s3.amazonaws.com/dataviz-
 
 // Promise Pending
 const dataPromise = d3.json(json_location);
-console.log("Data: ", dataPromise);
+console.log("Data Promise includes: ", dataPromise);
 
 // Fetch the JSON data and console log it
 d3.json(json_location).then(function(data) {
-  console.log(data);
+  console.log("What's in the data: ", data);
   var dropdown = d3.select("#selDataset");
   data.names.forEach((name) => {
     dropdown.append("option").text(name).property("value", name);
@@ -17,11 +17,15 @@ d3.json(json_location).then(function(data) {
   bubbles(test_subject_id);
   guage(test_subject_id);
   demoinfo(test_subject_id);
-
+  
+  console.log("Done with first fetch.");
 });
 
 function optionChanged(subjectID) {
     //runs my functions again when the drop down is changed
+    console.clear();
+    console.log("Optionchanged() start");
+    console.log("Data given: ", subjectID);
     bars(subjectID);
     bubbles(subjectID);
     guage(subjectID);
@@ -31,9 +35,18 @@ function optionChanged(subjectID) {
 function demoinfo(subjectID) {
     d3.json("https://2u-data-curriculum-team.s3.amazonaws.com/dataviz-classroom/v1.1/14-Interactive-Web-Visualizations/02-Homework/samples.json").then((data) => {
       //grab the data
+      console.log("Demoinfo() Start");
+      console.log("Data given: ", subjectID);
+      console.log("Data retrieved: ", data);
+
       var metadata = data.metadata;
+      console.log("Metadata values: ", metadata);
+
       var resultData = metadata.filter(IDfunction => IDfunction.id == subjectID);
+      console.log("Filtered metadata: ", resultData)
+
       var result = resultData[0];
+      console.log("First value of resultData[0]:", resultData[0]);
   
       //select our div
       var demo_details = d3.select("#sample-metadata");
@@ -51,10 +64,19 @@ function demoinfo(subjectID) {
   function bars(subjectID) {
     d3.json("https://2u-data-curriculum-team.s3.amazonaws.com/dataviz-classroom/v1.1/14-Interactive-Web-Visualizations/02-Homework/samples.json").then((data) => {
       //grab the data
+      console.log("bars() Start");
+      console.log("Data given: ", subjectID);
+      console.log("Data retrieved: ", data);
+
       var samples = data.samples;
+      console.log("Samples values: ", samples);
+
       var resultData = samples.filter(IDfunction => IDfunction.id == subjectID);
+      console.log("Filtered metadata: ", resultData)
+
       var result = resultData[0];
-  
+      console.log("First value of resultData[0]:", resultData[0]);
+
       //top 10 using slice()
       var otu_ids = result.otu_ids.slice(0, 10).map(otuID => `OTU ${otuID}`).reverse();
       var sample_values = result.sample_values.slice(0, 10).reverse();
@@ -86,9 +108,18 @@ function demoinfo(subjectID) {
   function bubbles(subjectID) {
     d3.json("https://2u-data-curriculum-team.s3.amazonaws.com/dataviz-classroom/v1.1/14-Interactive-Web-Visualizations/02-Homework/samples.json").then((data) => {
         //grab the data
+        console.log("bubbles() Start");
+        console.log("Data given: ", subjectID);
+        console.log("Data retrieved: ", data);
+  
         var samples = data.samples;
+        console.log("Samples values: ", samples);
+  
         var resultData = samples.filter(IDfunction => IDfunction.id == subjectID);
+        console.log("Filtered metadata: ", resultData)
+  
         var result = resultData[0];
+        console.log("First value of resultData[0]:", resultData[0]);
     
         //grab the OTU info
         var otu_ids = result.otu_ids;
@@ -130,33 +161,49 @@ function demoinfo(subjectID) {
   function guage(subjectID) {
     d3.json("https://2u-data-curriculum-team.s3.amazonaws.com/dataviz-classroom/v1.1/14-Interactive-Web-Visualizations/02-Homework/samples.json").then((data) => {
         //grab the data
+        console.log("guage() Start");
+        console.log("Data given: ", subjectID);
+        console.log("Data retrieved: ", data);
+
         var metadata = data.metadata;
+        console.log("Metadata values: ", metadata);
+
         var resultData = metadata.filter(IDfunction => IDfunction.id == subjectID);
+        console.log("Filtered metadata: ", resultData)
+        
         var result = resultData[0];
+        console.log("First value of resultData[0]:", resultData[0]);
+
+
         var wfreq = result.wfreq;
+        console.log("Washing Frequency: ", wfreq);
     
         //trace
         var gaugeTrace = {
-        type: "indicator",
-        mode: "gauge+number",
-        value: wfreq,
-        title: { text: "Belly Button Washing Frequency<br>Scrubs per Week" },
-        gauge: {
-          axis: { range: [null, 9], tickwidth: 1, tickcolor: "darkblue" },
-          bar: { color: "black" },
-          steps: [
-            { range: [0, 1], color: "#ffffe5" }, //https://www.colorhexa.com/ffffe5-to-005824
-            { range: [1, 2], color: "#eaf1d5" },
-            { range: [2, 3], color: "#d4e3c5" },
-            { range: [3, 4], color: "#bfd5b5" },
-            { range: [4, 5], color: "#aac7a5" },
-            { range: [5, 6], color: "#95b995" },
-            { range: [6, 7], color: "#6a9e74" },
-            { range: [7, 8], color: "#408254" }, 
-            { range: [8, 9], color: "#005824" } 
-          ]
-        }
-      };
+          type: "indicator",
+          mode: "gauge+number",
+          value: wfreq,
+          title: { text: "Belly Button Washing Frequency<br>Scrubs per Week" },
+          gauge: {
+            axis: { 
+              range: [0, 9], 
+              tickwidth: 1, 
+              tickcolor: "darkblue",
+              tickvals: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]},
+            bar: { color: "black" },
+            steps: [
+              { range: [0, 1], color: "#ffffe5" }, //https://www.colorhexa.com/ffffe5-to-005824
+              { range: [1, 2], color: "#eaf1d5" },
+              { range: [2, 3], color: "#d4e3c5" },
+              { range: [3, 4], color: "#bfd5b5" },
+              { range: [4, 5], color: "#aac7a5" },
+              { range: [5, 6], color: "#95b995" },
+              { range: [6, 7], color: "#6a9e74" },
+              { range: [7, 8], color: "#408254" }, 
+              { range: [8, 9], color: "#005824" } 
+            ]
+          }
+        };
         //data
         var gaugeData = [gaugeTrace];
     
