@@ -1,9 +1,9 @@
 # belly-button-challenge
 
 # Included files:  
-** README.md - this file
-** index.html - core HTML file that pulls the app.js file
-** app.js - my code of javascript for the belly button dashboard
+* README.md - this file
+* index.html - core HTML file that pulls the app.js file
+* app.js - my code of javascript for the belly button dashboard
 
 # I included the guage bonus into my app.js
 
